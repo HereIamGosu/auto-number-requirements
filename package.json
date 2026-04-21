@@ -36,8 +36,13 @@
       "properties": {
         "auto-number-requirements.requirementTypes": {
           "type": "array",
-          "items": { "type": "string" },
-          "default": ["FR", "NFR"],
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "FR",
+            "NFR"
+          ],
           "description": "Список типов требований для нумерации. Каждый тип нумеруется независимо."
         },
         "auto-number-requirements.startFrom": {

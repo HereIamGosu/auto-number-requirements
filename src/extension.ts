@@ -7,35 +7,6 @@ let statusBarItem: vscode.StatusBarItem;
 export function activate(context: vscode.ExtensionContext) {
     outputChannel = vscode.window.createOutputChannel('Auto-number Requirements');
 
-    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBarItem.command = 'auto-number-requirements.numberRequirements';
-    context.subscriptions.push(statusBarItem);
-
-    const updateStatusBar = (editor?: vscode.TextEditor) => {
-        if (!editor) { statusBarItem.hide(); return; }
-        const config = vscode.workspace.getConfiguration('auto-number-requirements');
-        const types = config.get<string[]>('requirementTypes', ['FR', 'NFR']);
-        const lines = Array.from({ length: editor.document.lineCount }, (_, i) => ({
-            text: editor.document.lineAt(i).text
-        }));
-        const counts = countByType(lines, types);
-        const parts = Object.entries(counts).filter(([, n]) => n > 0).map(([t, n]) => `${t}:${n}`);
-        if (parts.length === 0) { statusBarItem.hide(); return; }
-        statusBarItem.text = `$(list-ordered) ${parts.join(' ')}`;
-        statusBarItem.tooltip = 'Auto-number Requirements — нажмите для нумерации';
-        statusBarItem.show();
-    };
-
-    context.subscriptions.push(
-        vscode.window.onDidChangeActiveTextEditor(updateStatusBar),
-        vscode.workspace.onDidChangeTextDocument(e => {
-            if (vscode.window.activeTextEditor?.document === e.document) {
-                updateStatusBar(vscode.window.activeTextEditor);
-            }
-        })
-    );
-    updateStatusBar(vscode.window.activeTextEditor);
-
     const commandId = 'auto-number-requirements.numberRequirements';
     const disposable = vscode.commands.registerCommand(commandId, async () => {
         outputChannel.appendLine('--- Запуск команды ---');
@@ -98,6 +69,39 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(disposable);
+
+    // Status bar — создаём после регистрации команды, чтобы клик гарантированно работал
+    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    statusBarItem.command = commandId;
+    context.subscriptions.push(statusBarItem);
+
+    const updateStatusBar = (editor?: vscode.TextEditor) => {
+        if (!editor) { statusBarItem.hide(); return; }
+        const config = vscode.workspace.getConfiguration('auto-number-requirements');
+        const types = config.get<string[]>('requirementTypes', ['FR', 'NFR']);
+        const lines = Array.from({ length: editor.document.lineCount }, (_, i) => ({
+            text: editor.document.lineAt(i).text
+        }));
+        const counts = countByType(lines, types);
+        const parts = Object.entries(counts).filter(([, n]) => n > 0).map(([t, n]) => `${t}:${n}`);
+        if (parts.length === 0) { statusBarItem.hide(); return; }
+        statusBarItem.text = `$(list-ordered) ${parts.join(' ')}`;
+        statusBarItem.tooltip = 'Auto-number Requirements — нажмите для нумерации';
+        statusBarItem.show();
+    };
+
+    context.subscriptions.push(
+        vscode.window.onDidChangeActiveTextEditor(updateStatusBar),
+        vscode.workspace.onDidChangeTextDocument(e => {
+            if (vscode.window.activeTextEditor?.document === e.document) {
+                updateStatusBar(vscode.window.activeTextEditor);
+            }
+        })
+    );
+
+    // Задержка нужна: при старте VSCode activeTextEditor может быть undefined
+    // даже если вкладка уже открыта — он становится доступен чуть позже
+    setTimeout(() => updateStatusBar(vscode.window.activeTextEditor), 200);
 }
 
 export function deactivate() {
