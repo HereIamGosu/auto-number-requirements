@@ -2,7 +2,7 @@
   "name": "auto-number-requirements",
   "displayName": "Auto-Number Requirements",
   "description": "Автоматическая нумерация требований FR и NFR в спецификациях",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "hereiamgosu",
   "repository": {
     "type": "git",
