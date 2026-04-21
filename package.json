@@ -1,0 +1,54 @@
+{
+  "name": "auto-number-requirements",
+  "displayName": "Auto-Number Requirements",
+  "description": "Автоматическая нумерация требований FR и NFR в спецификациях",
+  "version": "1.0.2",
+  "publisher": "hereiamgosu",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HereIamGosu/auto-number-requirements.git"
+  },
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+"main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "auto-number-requirements.numberRequirements",
+        "title": "Auto-number Requirements (FR/NFR)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "auto-number-requirements.numberRequirements",
+        "key": "ctrl+alt+n",
+        "mac": "cmd+alt+n",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "Auto-number Requirements",
+      "properties": {
+        "auto-number-requirements.pattern": {
+          "type": "string",
+          "default": "^\\s*(##### (FR|NFR)-[A-Za-z0-9-]+-)(\\d*)",
+          "description": "Регулярное выражение для поиска строк требований.\nПервая группа захвата — префикс до номера (включая завершающий дефис).\nВторая группа — тип (FR или NFR).\nТретья группа — номер (может быть пустым)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.0.0"
+  }
+}
