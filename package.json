@@ -2,7 +2,7 @@
   "name": "auto-number-requirements",
   "displayName": "Auto-Number Requirements",
   "description": "Автоматическая нумерация требований FR и NFR в спецификациях",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "publisher": "hereiamgosu",
   "repository": {
     "type": "git",
@@ -56,15 +56,18 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
+    "build": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "test": "mocha"
+    "test": "mocha",
+    "publish:open-vsx": "ovsx publish --skip-duplicate"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/vscode": "^1.80.0",
     "@vscode/test-electron": "^2.5.2",
     "mocha": "^11.7.5",
+    "ovsx": "^0.10.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.0.0"
   }

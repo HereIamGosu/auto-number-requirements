@@ -1,6 +1,8 @@
 .vscode/**
 node_modules/**
 src/**
+out/test/**
 tsconfig.json
 *.vsix
 .vscodeignore
+DEV_CHECKLIST.md
